@@ -45,7 +45,7 @@ function App() {
         const post = await socialNetwork.methods.posts(i).call();
         posts.push(post);
       }
-      setPosts([...posts]);
+      setPosts([...posts.sort((a, b) => (b.tipAmount - a.tipAmount))]);
       setLoading(false);
     } else {
       window.alert('SocialNetwork contract not deployed to detected network.');
@@ -68,6 +68,14 @@ function App() {
       })
   }
 
+  const tipPost = (id, tipAmount) => {
+    setLoading(true);
+    socialNetwork.methods.tipPost(id).send({ from:account, value: tipAmount })
+      .once('receipt', (receipt) => {
+        setLoading(false);
+      });
+  }
+
   return (
     <div>
       <Navbar account={account} />
@@ -76,6 +84,7 @@ function App() {
         : <Main
             posts={posts}
             createPost={createPost}
+            tipPost={tipPost}
           />
       }
     </div>

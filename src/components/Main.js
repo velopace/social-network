@@ -1,12 +1,17 @@
 import { useRef } from 'react';
 import Identicon from 'identicon.js';
 
-function Main({ posts, createPost }) {
+function Main({ posts, createPost, tipPost }) {
   const postContentInput = useRef(null);
 
   const handleSubmitContent = (e) => {
     e.preventDefault();
     createPost(postContentInput.current.value);
+  }
+
+  const handleClickTipPost = (postId) => {
+    const tipAmount = window.web3.utils.toWei('0.1', 'ether');
+    tipPost(postId, tipAmount);
   }
 
   return (
@@ -51,7 +56,7 @@ function Main({ posts, createPost }) {
                       </small>
                       <button
                         className="btn btn-link btn-sm float-end pt-0"
-                        name={post.id}
+                        onClick={(e) => handleClickTipPost(post.id)}
                       >
                         TIP 0.1 ETH
                       </button>
